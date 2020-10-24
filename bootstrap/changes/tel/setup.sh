@@ -92,10 +92,11 @@ if [ "$UPDATE" = false ]; then #if first start detected
 	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended  2>&1
   	chsh -s zsh #set zsh default shell
 	#install zsh plugins
-	catch "$(git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 2>&1)"
+	#disabled because interferences with suggestion bar
+	#catch "$(git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 2>&1)"
 	catch "$(git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting 2>&1)"
   	sed -i 's/robbyrussell/avit/g' ~/.zshrc
-	sed -i 's/plugins=(git)/plugins=(git catimg fancy-ctrl-z zsh-syntax-highlighting zsh-autosuggestions)/g' ~/.zshrc #fzf maybe needed here
+	sed -i 's/plugins=(git)/plugins=(git catimg fancy-ctrl-z zsh-syntax-highlighting)/g' ~/.zshrc #fzf maybe needed here
 	echo ". ~/.tel/.telrc # Load TEL " >> ~/.zshrc
 	# # # # #
 
@@ -128,6 +129,7 @@ chmod +x ~/bin/* # scripts that receive files and urls shared to TEL
 #chmod +x ~/../usr/bin/tel-applist
 chmod +x ~/../usr/bin/tel-setup
 chmod +x ~/../usr/bin/tel-restart
+chmod +x ~/../usr/bin/tel-reload
 
 if [ -f "$HOME/../usr/etc/motd_finished" ]; then
 	mv ~/../usr/etc/motd_finished ~/../usr/etc/motd #set final motd
