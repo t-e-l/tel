@@ -188,7 +188,7 @@ final class TermuxPreferences {
     }
     void reloadFromProperties(Context context) {
 
-        File suggestionBarFile = new File(TermuxService.HOME_PATH+"/.tel/suggestionbar.conf");
+        File suggestionBarFile = new File(TermuxService.HOME_PATH+"/.tel/configs/suggestionbar.conf");
         Properties suggestionProps = new Properties();
         try {
             if (suggestionBarFile.isFile() && suggestionBarFile.canRead()) {
