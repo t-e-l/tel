@@ -113,6 +113,7 @@ if [ "$UPDATE" = false ]; then #if first start detected
 	cp -rf ~/../usr/tel/.zlogin ~/
 	cp -rf ~/../usr/tel/.vimrc ~/
 	cp -rf ~/../usr/tel/.telrc ~/.tel/
+	cp -rTf ~/../usr/tel/.tel/bin ~/.tel/bin
 
 else
 	log "updating configs"
