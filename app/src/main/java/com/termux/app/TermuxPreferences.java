@@ -78,6 +78,13 @@ final class TermuxPreferences {
 
     final List<KeyboardShortcut> shortcuts = new ArrayList<>();
 
+
+    private int buttonCount = 5;
+    private char inputChar = ' ';
+    private boolean bAndW = false;
+    private boolean showIcons = true;
+    private int searchTolerance = 80;
+    private int textSize = 10;
     /**
      * If value is not in the range [min, max], set it to either min or max.
      */
@@ -155,7 +162,55 @@ final class TermuxPreferences {
         return null;
     }
 
+    public int getButtonCount(){
+        return buttonCount;
+    }
+    public char getInputChar(){
+        return inputChar;
+    }
+    public boolean getBandW(){
+        return bAndW;
+    }
+    public boolean isShowIcons(){
+        return showIcons;
+    }
+    public int getTextSize(){
+        return textSize;
+    }
+    public int getSearchTolerance(){
+        return searchTolerance;
+    }
     void reloadFromProperties(Context context) {
+
+        File suggestionBarFile = new File(TermuxService.HOME_PATH+"/.tel/suggestionbar.properties");
+        Properties suggestionProps = new Properties();
+        try {
+            if (suggestionBarFile.isFile() && suggestionBarFile.canRead()) {
+                try (FileInputStream in = new FileInputStream(suggestionBarFile)) {
+                    suggestionProps.load(new InputStreamReader(in, StandardCharsets.UTF_8));
+                }
+            }
+        } catch (Exception e) {
+            Toast.makeText(context, "Could not open properties file suggestionbar.properties: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e("termux", "Error loading props", e);
+        }
+
+        try{
+            buttonCount = Integer.parseInt(suggestionProps.getProperty("button-count","5"));
+        }catch(Exception e){}
+
+        inputChar = suggestionProps.getProperty("input-char"," ").charAt(0);
+        bAndW = "true".equals(suggestionProps.getProperty("black-and-white-icons","false"));
+        showIcons = "true".equals(suggestionProps.getProperty("show-icons","true"));
+
+        try{
+            searchTolerance = Integer.parseInt(suggestionProps.getProperty("search-tolerance","80"));
+        }catch(Exception e){}
+
+        try{
+            buttonCount = Integer.parseInt(suggestionProps.getProperty("button-count","5"));
+        }catch(Exception e){}
+
         File propsFile = new File(TermuxService.HOME_PATH + "/.termux/termux.properties");
         if (!propsFile.exists())
             propsFile = new File(TermuxService.HOME_PATH + "/.config/termux/termux.properties");
