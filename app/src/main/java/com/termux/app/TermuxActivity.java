@@ -312,7 +312,7 @@ public final class TermuxActivity extends Activity implements ServiceConnection,
 
         final ViewPager viewPager2 = findViewById(R.id.viewpager2);
         ViewGroup.LayoutParams layoutParams2 = viewPager2.getLayoutParams();
-        layoutParams2.height = layoutParams2.height * (mSettings.mExtraKeys == null ? 0 : mSettings.mExtraKeys.getMatrix().length);
+        layoutParams2.height = Math.round(layoutParams2.height * mSettings.getBarHeight());
         viewPager2.setLayoutParams(layoutParams2);
         final SuggestionBarCallback suggestionBarCallback = this;
         viewPager2.setAdapter(new PagerAdapter() {
@@ -333,6 +333,8 @@ public final class TermuxActivity extends Activity implements ServiceConnection,
                 View layout;
                 layout = mSuggestionBarView = (SuggestionBarView) inflater.inflate(R.layout.suggestion_bar, collection, false);
                 mSuggestionBarView.reload(mSettings);
+
+
                 mTerminalView.setSuggestionBarCallback(suggestionBarCallback);
                 collection.addView(layout);
                 return layout;

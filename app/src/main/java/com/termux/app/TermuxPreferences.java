@@ -87,6 +87,7 @@ final class TermuxPreferences {
     private boolean showIcons = true;
     private int searchTolerance = 80;
     private int textSize = 10;
+    private float barHeight = 1;
     private ArrayList<String> defaultButtons;
     /**
      * If value is not in the range [min, max], set it to either min or max.
@@ -186,6 +187,9 @@ final class TermuxPreferences {
     public ArrayList<String> getDefaultButtons(){
         return defaultButtons;
     }
+    public float getBarHeight(){
+        return barHeight;
+    }
     void reloadFromProperties(Context context) {
 
         File suggestionBarFile = new File(TermuxService.HOME_PATH+"/.tel/configs/suggestionbar.conf");
@@ -225,6 +229,9 @@ final class TermuxPreferences {
         String defaultButtonString = suggestionProps.getProperty("default-buttons","telegram");
         defaultButtons = new ArrayList<String>(Arrays.asList(defaultButtonString.split(",")));
 
+        try{
+            barHeight = Float.parseFloat(suggestionProps.getProperty("bar-height","1.5"));
+        }catch(Exception e){}
 
         File propsFile = new File(TermuxService.HOME_PATH + "/.termux/termux.properties");
         if (!propsFile.exists())
