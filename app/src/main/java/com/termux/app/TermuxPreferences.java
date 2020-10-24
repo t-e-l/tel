@@ -18,8 +18,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -85,6 +87,7 @@ final class TermuxPreferences {
     private boolean showIcons = true;
     private int searchTolerance = 80;
     private int textSize = 10;
+    private ArrayList<String> defaultButtons;
     /**
      * If value is not in the range [min, max], set it to either min or max.
      */
@@ -180,9 +183,12 @@ final class TermuxPreferences {
     public int getSearchTolerance(){
         return searchTolerance;
     }
+    public ArrayList<String> getDefaultButtons(){
+        return defaultButtons;
+    }
     void reloadFromProperties(Context context) {
 
-        File suggestionBarFile = new File(TermuxService.HOME_PATH+"/.tel/suggestionbar.properties");
+        File suggestionBarFile = new File(TermuxService.HOME_PATH+"/.tel/suggestionbar.conf");
         Properties suggestionProps = new Properties();
         try {
             if (suggestionBarFile.isFile() && suggestionBarFile.canRead()) {
@@ -191,7 +197,7 @@ final class TermuxPreferences {
                 }
             }
         } catch (Exception e) {
-            Toast.makeText(context, "Could not open properties file suggestionbar.properties: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Could not open properties file suggestionbar.conf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             Log.e("termux", "Error loading props", e);
         }
 
@@ -199,17 +205,26 @@ final class TermuxPreferences {
             buttonCount = Integer.parseInt(suggestionProps.getProperty("button-count","5"));
         }catch(Exception e){}
 
-        inputChar = suggestionProps.getProperty("input-char"," ").charAt(0);
+        String inputCharString = suggestionProps.getProperty("input-char"," ");
+        if(inputCharString.length()> 0 && !inputCharString.toLowerCase().equals("space")){
+            inputChar= inputCharString.charAt(0);
+        }else{
+            inputChar = ' ';
+        }
         bAndW = "true".equals(suggestionProps.getProperty("black-and-white-icons","false"));
         showIcons = "true".equals(suggestionProps.getProperty("show-icons","true"));
 
         try{
-            searchTolerance = Integer.parseInt(suggestionProps.getProperty("search-tolerance","80"));
+            searchTolerance = Integer.parseInt(suggestionProps.getProperty("search-tolerance","70"));
         }catch(Exception e){}
 
         try{
             buttonCount = Integer.parseInt(suggestionProps.getProperty("button-count","5"));
         }catch(Exception e){}
+
+        String defaultButtonString = suggestionProps.getProperty("default-buttons","telegram");
+        defaultButtons = new ArrayList<String>(Arrays.asList(defaultButtonString.split(",")));
+
 
         File propsFile = new File(TermuxService.HOME_PATH + "/.termux/termux.properties");
         if (!propsFile.exists())

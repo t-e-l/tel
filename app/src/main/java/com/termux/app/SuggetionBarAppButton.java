@@ -11,6 +11,7 @@ public class SuggetionBarAppButton implements SuggestionBarButton{
         private boolean hasIcon;
         private String packageName;
         private Context context;
+        private int ratio = 0;
 
     public SuggetionBarAppButton(Context context, String packageName, String appName, Drawable icon) {
         hasIcon = true;
@@ -26,6 +27,8 @@ public class SuggetionBarAppButton implements SuggestionBarButton{
         this.packageName = packageName;
         this.context = context;
     }
+    public int getRatio(){return ratio;}
+    public void setRatio(int ratio){this.ratio=ratio;}
     public String getText() {
         return text;
     }

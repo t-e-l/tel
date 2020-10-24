@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.util.Log;
@@ -34,33 +35,38 @@ public final class SuggestionBarView extends GridLayout {
         super(context, attrs);
     }
 
+
     private List<SuggestionBarButton> searchButtons(List<SuggestionBarButton> list, String input, int buttonCount){
         List<SuggestionBarButton> newList = new ArrayList<>();
         int tolerance = settings.getSearchTolerance();
         input = input.toLowerCase();
         for(int i=0;i<list.size();i++){
-            int ratio = FuzzySearch.partialRatio(input,list.get(i).getText().toLowerCase());
+            SuggestionBarButton currentButton = list.get(i);
+            int ratio = FuzzySearch.partialRatio(input,currentButton.getText().toLowerCase());
             if(ratio >=tolerance){
-                newList.add(list.get(i));
+                currentButton.setRatio(ratio);
+                newList.add(currentButton);
             }
         }
-        for(int i=0;newList.size()<buttonCount && i<list.size();i++){
-            boolean found = false;
-            SuggestionBarButton newButton = list.get(i);
-            for(int j = 0;j<newList.size();j++){
-                if(newList.get(j).equals(newButton)){
-                    found = true;
-                    break;
+        Collections.sort(newList, new Comparator<SuggestionBarButton>() {
+            @Override
+            public int compare(SuggestionBarButton suggestionBarButton, SuggestionBarButton t1) {
+                int r1 = suggestionBarButton.getRatio();
+                int r2 = t1.getRatio();
+                if (r1 >r2){
+                    return -1;
+                }else if(r1< r2){
+                    return 1;
+                }else{
+                    return 0;
                 }
             }
-            if(!found){
-                newList.add(newButton);
-            }
-        }
+        });
         return newList;
 
     }
     void reloadWithInput(String input, final TerminalView terminalView){
+        input = input.trim();
         Log.e("SUGG",input);
         List<SuggestionBarButton> suggestionButtons = getInstalledAppButtons();
         setRowCount(suggestionButtons.size());
@@ -68,7 +74,37 @@ public final class SuggestionBarView extends GridLayout {
         removeAllViews();
         int buttonCount = settings.getButtonCount();
         if(input.length()> 0){
+            List<SuggestionBarButton> oldList = suggestionButtons;
             suggestionButtons = searchButtons(suggestionButtons,input, buttonCount);
+            for(int i=0;suggestionButtons.size()<buttonCount && i<oldList.size();i++){
+                boolean found = false;
+                SuggestionBarButton newButton = oldList.get(i);
+                for(int j = 0;j<suggestionButtons.size();j++){
+                    if(suggestionButtons.get(j).equals(newButton)){
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found){
+                    suggestionButtons.add(newButton);
+                }
+            }
+        }else{
+            ArrayList<String> defaultButtons = settings.getDefaultButtons();
+            Collections.reverse(defaultButtons);
+            for(int i=0;i<defaultButtons.size();i++){
+                Log.e("DEBUG",defaultButtons.get(i));
+                List<SuggestionBarButton> currentButtons = searchButtons(suggestionButtons,defaultButtons.get(i),1);
+                if(currentButtons.size() > 0){
+                    SuggestionBarButton currentButton = currentButtons.get(0);
+                    if(suggestionButtons.indexOf(currentButton) >= 0){
+                        suggestionButtons.remove(suggestionButtons.indexOf(currentButton));
+                    }
+                    suggestionButtons.add(0,currentButton);
+                }
+
+            }
+            Collections.reverse(defaultButtons);
         }
         for (int col = 0; col < suggestionButtons.size() && col <buttonCount; col++) {
             final SuggestionBarButton currentButton = suggestionButtons.get(col);

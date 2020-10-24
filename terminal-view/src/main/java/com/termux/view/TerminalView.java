@@ -727,7 +727,7 @@ public final class TerminalView extends View {
         if(text.indexOf(splitChar) >=0){
             return text.substring(text.indexOf(splitChar)+1);
         }
-        return text;
+        return "";
         /*does only read input from the line of the cursor
         String[] cmds = mTermSession.getEmulator().getScreen().getTranscriptText().split("\n");*/
     }

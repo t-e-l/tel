@@ -7,4 +7,6 @@ public interface SuggestionBarButton {
     public Boolean hasIcon();
     public Drawable getIcon();
     public void click();
+    public int getRatio();
+    public void setRatio(int ratio);
 }
