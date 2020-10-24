@@ -67,7 +67,6 @@ public final class SuggestionBarView extends GridLayout {
     }
     void reloadWithInput(String input, final TerminalView terminalView){
         input = input.trim();
-        Log.e("SUGG",input);
         List<SuggestionBarButton> suggestionButtons = getInstalledAppButtons();
         setRowCount(suggestionButtons.size());
         setColumnCount(suggestionButtons.size());
@@ -93,7 +92,6 @@ public final class SuggestionBarView extends GridLayout {
             ArrayList<String> defaultButtons = settings.getDefaultButtons();
             Collections.reverse(defaultButtons);
             for(int i=0;i<defaultButtons.size();i++){
-                Log.e("DEBUG",defaultButtons.get(i));
                 List<SuggestionBarButton> currentButtons = searchButtons(suggestionButtons,defaultButtons.get(i),1);
                 if(currentButtons.size() > 0){
                     SuggestionBarButton currentButton = currentButtons.get(0);

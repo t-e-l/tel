@@ -39,11 +39,9 @@ public class SuggetionBarAppButton implements SuggestionBarButton{
         return hasIcon;
     }
     public void click(){
-        Log.e("SUGGESTION_BAR","clicked!"+packageName);
         Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
         if (launchIntent != null) {
             context.startActivity(launchIntent);
-            Log.e("SUGGESTION_BAR","launched!");
         }
     }
 

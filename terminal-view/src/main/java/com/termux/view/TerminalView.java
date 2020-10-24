@@ -713,11 +713,7 @@ public final class TerminalView extends View {
         mTermSession.write(code);
         return true;
     }
-
-    public void writeRaw(String code){
-        mTermSession.write(code);
-    }
-
+    
     public void setSplitChar(char splitChar){
         this.splitChar = splitChar;
     }
