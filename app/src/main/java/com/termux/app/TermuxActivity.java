@@ -206,12 +206,19 @@ public final class TermuxActivity extends Activity implements ServiceConnection,
             TermuxInstaller.setupAppListCache(TermuxActivity.this);
         }
     };
-
+    
+    //run api action here
     private final BroadcastReceiver apiBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String apiAction = intent.getStringExtra(RELOAD_STYLE_ACTION);
-            String apiData = intent.getStringExtra(API_DATA);
+            String apiAction = intent.getStringExtra("action");
+            String toastText = "API_ACTION: "+apiAction;
+            int apiInt = intent.getIntExtra("time",-1);
+            if(apiInt > -1){
+                toastText+="\nAPI_INT: "+apiInt;
+            }
+            Toast.makeText(context, toastText,
+                Toast.LENGTH_LONG).show();
         }
     };
 
@@ -675,6 +682,7 @@ public final class TermuxActivity extends Activity implements ServiceConnection,
         registerReceiver(reloadStyleBroadcastReceiver, new IntentFilter(RELOAD_STYLE_ACTION));
         registerReceiver(appCacheBroadcastReceiver, new IntentFilter(APP_CACHE_ACTION));
         registerReceiver(restartBroadcastReceiver, new IntentFilter(RESTART_ACTION));
+        registerReceiver(apiBroadcastReceiver, new IntentFilter(API_ACTION));
         // The current terminal session may have changed while being away, force
         // a refresh of the displayed terminal:
         mTerminalView.onScreenUpdated();
@@ -689,6 +697,7 @@ public final class TermuxActivity extends Activity implements ServiceConnection,
         unregisterReceiver(reloadStyleBroadcastReceiver);
         unregisterReceiver(appCacheBroadcastReceiver);
         unregisterReceiver(restartBroadcastReceiver);
+        unregisterReceiver(apiBroadcastReceiver);
         getDrawer().closeDrawers();
     }
 
