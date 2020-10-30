@@ -5,6 +5,6 @@ if [ "$#" != "2" ]; then
 	exit
 fi
 am broadcast --user 0 \
-		--es text $2 \
+		--es text "$2" \
 		--es line $1 \
 		-a com.termux.app.status com.termux > /dev/null
