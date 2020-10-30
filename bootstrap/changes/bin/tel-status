@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/sh
 
-if [ "$#" < "2" ]; then
+if [ "$#" -lt "2" ]; then
 	echo 'usage: tel-status 0 a b c'
 	exit
 fi
