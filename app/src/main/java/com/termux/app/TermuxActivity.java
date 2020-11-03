@@ -212,15 +212,28 @@ public final class TermuxActivity extends Activity implements ServiceConnection,
         @Override
         public void onReceive(Context context, Intent intent) {
             String apiAction = intent.getStringExtra("action");
-            String toastText = "API_ACTION: "+apiAction;
-            int apiInt = intent.getIntExtra("time",-1);
-            if(apiInt > -1){
-                toastText+="\nAPI_INT: "+apiInt;
+            switch(apiAction){
+                case "toggle_airplane":
+                    toggleAirplane(context, intent);
+                    break;
+                case "toggle_wifi":
+                    break;
             }
-            Toast.makeText(context, toastText,
-                Toast.LENGTH_LONG).show();
         }
     };
+
+    private void toggleAirplane(Context context, Intent intent){
+        String mode = intent.getStringExtra("mode");
+        Log.e("TEL_API",mode);
+        Log.d("TEL_API",mode);
+        if("true".equals(mode)){
+            Toast.makeText(context, "true",
+                Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(context, "false",
+                Toast.LENGTH_LONG).show();
+        }
+    }
 
     void checkForFontAndColors() {
         try {
