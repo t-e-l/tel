@@ -25,11 +25,8 @@ for ARCH in $ARCHS; do
 	cd ..
 	rm -rf bootstrap-$ARCH
 done
-<<<<<<< HEAD:build_bootstrap.sh
-=======
 
 echo "zipping changes"
 cd changes
 zip -r ../changes.zip * > /dev/null 2>&1
 cd ..
->>>>>>> parent of 7f19c8d (move bootstrap changes into new repo):bootstrap/build_bootstrap.sh
