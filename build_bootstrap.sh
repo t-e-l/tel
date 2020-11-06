@@ -13,7 +13,7 @@ for ARCH in $ARCHS; do
 	echo "downloading orginal bootstrap from $URL"
 	wget -O bootstrap-$ARCH.zip $URL > /dev/null 2>&1
 	unzip bootstrap-$ARCH.zip -d bootstrap-$ARCH > /dev/null 2>&1
-	cp -r bootstrap-changes/changes/* bootstrap-$ARCH 
+	cp -r bootstrap-changes/* bootstrap-$ARCH 
 	cd bootstrap-$ARCH
 	echo "zipping package"
 	zip -r ../app/src/main/cpp/bootstrap-$ARCH.zip * > /dev/null 2>&1
