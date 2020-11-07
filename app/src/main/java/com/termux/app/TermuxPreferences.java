@@ -86,7 +86,7 @@ final class TermuxPreferences {
     private boolean bAndW = false;
     private boolean showIcons = true;
     private int searchTolerance = 80;
-    private int textSize = 10;
+    private float textSize = 10;
     private float barHeight = 1;
     private ArrayList<String> defaultButtons;
 
@@ -186,7 +186,7 @@ final class TermuxPreferences {
     public boolean isShowIcons(){
         return showIcons;
     }
-    public int getTextSize(){
+    public float getTextSize(){
         return textSize;
     }
     public int getSearchTolerance(){
@@ -264,8 +264,10 @@ final class TermuxPreferences {
         statusTextColor = themeProps.getProperty("status-text-color","#c0b18b");
         barColor = themeProps.getProperty("bar-color","#1f1f1f");
         statusBarColor = themeProps.getProperty("statusbar-color","#991f1f1f");
+        try{
+            textSize = Float.parseFloat(themeProps.getProperty("sb-text-size","10"));
+        }catch(Exception e){}
 
-        
         //Termux Settings:
         File propsFile = new File(TermuxService.HOME_PATH + "/.termux/termux.properties");
         if (!propsFile.exists())
