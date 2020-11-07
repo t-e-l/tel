@@ -2,6 +2,7 @@
 # with the addition of the /captures below.
 /captures
 bootstrap/org
+bootstrap-*
 # Built application files
 build/
 *.apk

@@ -221,57 +221,51 @@ final class TermuxPreferences {
             Toast.makeText(context, "Could not open properties file ui.conf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             Log.e("termux", "Error loading props", e);
         }
-        backgroundColor = uiProps.getProperty("background-color","#991f1f1f");
-        useSystemWallpaper = "true".equals(uiProps.getProperty("use-system-wallpaper","false"));
+        String inputCharString = uiProps.getProperty("input-char"," ");
+        if(inputCharString.length()> 0 && !inputCharString.toLowerCase().equals("space")){
+            inputChar= inputCharString.charAt(0);
+        }else{
+            inputChar = ' ';
+        }
         try{
-            statusTextSize = Float.parseFloat(uiProps.getProperty("status-text-size","12"));
+            buttonCount = Integer.parseInt(uiProps.getProperty("button-count","5"));
         }catch(Exception e){}
-        statusTextColor = uiProps.getProperty("status-text-color","#c0b18b");
-        barColor = uiProps.getProperty("bar-color","#1f1f1f");
-        statusBarColor = uiProps.getProperty("statusbar-color","#991f1f1f");
-        //Suggestionbar Settings:
-        File suggestionBarFile = new File(TermuxService.HOME_PATH+"/.tel/configs/suggestionbar.conf");
-        Properties suggestionProps = new Properties();
+        try{
+            searchTolerance = Integer.parseInt(uiProps.getProperty("search-tolerance","70"));
+        }catch(Exception e){}
+
+        String defaultButtonString = uiProps.getProperty("default-buttons","telegram");
+        defaultButtons = new ArrayList<String>(Arrays.asList(defaultButtonString.split(",")));
+
+        //Theme Settings:
+        File themeFile = new File(TermuxService.HOME_PATH+"/.tel/configs/theme.conf");
+        Properties themeProps = new Properties();
         try {
-            if (suggestionBarFile.isFile() && suggestionBarFile.canRead()) {
-                try (FileInputStream in = new FileInputStream(suggestionBarFile)) {
-                    suggestionProps.load(new InputStreamReader(in, StandardCharsets.UTF_8));
+            if (themeFile.isFile() && themeFile.canRead()) {
+                try (FileInputStream in = new FileInputStream(themeFile)) {
+                    themeProps.load(new InputStreamReader(in, StandardCharsets.UTF_8));
                 }
             }
         } catch (Exception e) {
             Toast.makeText(context, "Could not open properties file suggestionbar.conf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             Log.e("termux", "Error loading props", e);
         }
-
+        bAndW = "true".equals(themeProps.getProperty("black-and-white-icons","false"));
+        showIcons = "true".equals(themeProps.getProperty("show-icons","true"));
         try{
-            buttonCount = Integer.parseInt(suggestionProps.getProperty("button-count","5"));
+            barHeight = Float.parseFloat(themeProps.getProperty("bar-height","1.5"));
         }catch(Exception e){}
 
-        String inputCharString = suggestionProps.getProperty("input-char"," ");
-        if(inputCharString.length()> 0 && !inputCharString.toLowerCase().equals("space")){
-            inputChar= inputCharString.charAt(0);
-        }else{
-            inputChar = ' ';
-        }
-        bAndW = "true".equals(suggestionProps.getProperty("black-and-white-icons","false"));
-        showIcons = "true".equals(suggestionProps.getProperty("show-icons","true"));
-
+        backgroundColor = themeProps.getProperty("background-color","#991f1f1f");
+        useSystemWallpaper = "true".equals(themeProps.getProperty("use-system-wallpaper","false"));
         try{
-            searchTolerance = Integer.parseInt(suggestionProps.getProperty("search-tolerance","70"));
+            statusTextSize = Float.parseFloat(themeProps.getProperty("status-text-size","12"));
         }catch(Exception e){}
+        statusTextColor = themeProps.getProperty("status-text-color","#c0b18b");
+        barColor = themeProps.getProperty("bar-color","#1f1f1f");
+        statusBarColor = themeProps.getProperty("statusbar-color","#991f1f1f");
 
-        try{
-            buttonCount = Integer.parseInt(suggestionProps.getProperty("button-count","5"));
-        }catch(Exception e){}
-
-        String defaultButtonString = suggestionProps.getProperty("default-buttons","telegram");
-        defaultButtons = new ArrayList<String>(Arrays.asList(defaultButtonString.split(",")));
-
-        try{
-            barHeight = Float.parseFloat(suggestionProps.getProperty("bar-height","1.5"));
-        }catch(Exception e){}
-
-
+        
         //Termux Settings:
         File propsFile = new File(TermuxService.HOME_PATH + "/.termux/termux.properties");
         if (!propsFile.exists())
