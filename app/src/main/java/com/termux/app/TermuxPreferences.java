@@ -97,6 +97,7 @@ final class TermuxPreferences {
     private String barColor;
     private String backgroundColor;
     private String statusBarColor;
+    private boolean runBackground;
     /**
      * If value is not in the range [min, max], set it to either min or max.
      */
@@ -206,10 +207,11 @@ final class TermuxPreferences {
     public String getBarColor(){return barColor; }
     public String getBackgroundColor(){return backgroundColor;}
     public String getStatusBarColor(){return statusBarColor;}
+    public boolean isRunBackground(){return runBackground;}
     void reloadFromProperties(Context context) {
 
         //UI Settings:
-        File uiFile = new File(TermuxService.HOME_PATH+"/.tel/configs/ui.conf");
+        File uiFile = new File(TermuxService.HOME_PATH+"/.tel/configs/settings.conf");
         Properties uiProps = new Properties();
         try {
             if (uiFile.isFile() && uiFile.canRead()) {
@@ -218,7 +220,7 @@ final class TermuxPreferences {
                 }
             }
         } catch (Exception e) {
-            Toast.makeText(context, "Could not open properties file ui.conf: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Could not open properties file settings.conf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             Log.e("termux", "Error loading props", e);
         }
         String inputCharString = uiProps.getProperty("input-char"," ");
@@ -236,7 +238,7 @@ final class TermuxPreferences {
 
         String defaultButtonString = uiProps.getProperty("default-buttons","telegram");
         defaultButtons = new ArrayList<String>(Arrays.asList(defaultButtonString.split(",")));
-
+        runBackground = "true".equals(uiProps.getProperty("run-in-background","true"));
         //Theme Settings:
         File themeFile = new File(TermuxService.HOME_PATH+"/.tel/configs/theme.conf");
         Properties themeProps = new Properties();
@@ -247,7 +249,7 @@ final class TermuxPreferences {
                 }
             }
         } catch (Exception e) {
-            Toast.makeText(context, "Could not open properties file suggestionbar.conf: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Could not open properties file theme.conf: " + e.getMessage(), Toast.LENGTH_LONG).show();
             Log.e("termux", "Error loading props", e);
         }
         bAndW = "true".equals(themeProps.getProperty("black-and-white-icons","false"));
